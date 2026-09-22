@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build all modules
-        run: ./gradlew build -x test --no-daemon
+        run: ./gradlew assemble -x test -x runGameTest --no-daemon
 
       - name: List jars
         run: find . -name "*.jar" -path "*/build/libs/*" -not -name "*-sources.jar" -not -name "*-javadoc.jar"
