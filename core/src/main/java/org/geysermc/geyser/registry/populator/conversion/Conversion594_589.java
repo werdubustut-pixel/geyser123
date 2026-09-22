@@ -76,8 +76,23 @@ public final class Conversion594_589 {
     }
 
     public static NbtMap remapBlock(NbtMap tag) {
+        tag = removeCornerState(tag);
         tag = unflattenColorBlock(tag);
         return remapObserverFacing(tag);
+    }
+
+    /**
+     * Removes the modern `minecraft:corner` state from stairs — Bedrock 1.20.0
+     * does not know this state and would otherwise fail to map the block.
+     */
+    private static NbtMap removeCornerState(NbtMap tag) {
+        NbtMap states = tag.getCompound("states");
+        if (!states.containsKey("minecraft:corner")) {
+            return tag;
+        }
+        NbtMapBuilder statesBuilder = states.toBuilder();
+        statesBuilder.remove("minecraft:corner");
+        return tag.toBuilder().putCompound("states", statesBuilder.build()).build();
     }
 
     private static GeyserMappingItem unflattenColorItem(GeyserMappingItem mapping) {
